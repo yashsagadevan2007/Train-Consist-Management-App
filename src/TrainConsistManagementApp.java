@@ -1,31 +1,29 @@
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TrainConsistManagementApp {
     public static void main(String[] args) {
-        // 1. Create a LinkedHashSet to represent the train formation
-        // This ensures uniqueness while preserving the physical insertion order
-        Set<String> trainFormation = new LinkedHashSet<>();
+        // 1. Create a HashMap to store bogie-capacity information
+        // Key: Bogie Name (String), Value: Capacity (Integer)
+        Map<String, Integer> bogieCapacities = new HashMap<>();
 
-        // 2. Attach bogies to the engine
-        trainFormation.add("Engine");
-        trainFormation.add("Sleeper");
-        trainFormation.add("Cargo");
-        trainFormation.add("Guard");
+        // 2. & 3. Insert capacity values using the put() method
+        bogieCapacities.put("Sleeper", 72);
+        bogieCapacities.put("AC Chair", 56);
+        bogieCapacities.put("First Class", 24);
+        bogieCapacities.put("General", 90);
 
-        System.out.println("Initial Formation: " + trainFormation);
+        System.out.println("Bogie Capacity Mapping Created.\n");
 
-        // 3. Attempt to attach a duplicate bogie intentionally
-        System.out.println("\nAttempting to add duplicate 'Sleeper'...");
-        boolean isAdded = trainFormation.add("Sleeper");
-
-        if (!isAdded) {
-            System.out.println("Duplicate detected! 'Sleeper' was not added again.");
+        // 4. Iterate over the map using entrySet()
+        System.out.println("--- Train Capacity Details ---");
+        for (Map.Entry<String, Integer> entry : bogieCapacities.entrySet()) {
+            // 5. Display each bogie along with its corresponding capacity
+            System.out.println("Bogie Type: " + entry.getKey() + " | Capacity: " + entry.getValue() + " seats");
         }
 
-        // 4. Display the final formation order
-        // 5. Ensure duplicates do not appear in the output
-        System.out.println("\nFinal Train Formation (Unique & Ordered):");
-        System.out.println(trainFormation);
+        // Demonstrating Fast Lookup
+        String searchBogie = "AC Chair";
+        System.out.println("\nQuick Lookup: Capacity of " + searchBogie + " is " + bogieCapacities.get(searchBogie));
     }
 }
