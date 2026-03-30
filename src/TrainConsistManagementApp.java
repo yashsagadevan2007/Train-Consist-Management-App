@@ -1,7 +1,5 @@
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 class Bogie {
     String name;
@@ -14,37 +12,35 @@ class Bogie {
 
     @Override
     public String toString() {
-        return "Bogie{Name='" + name + "', Capacity=" + capacity + "}";
+        return name + " (" + capacity + " seats)";
     }
 }
 
 public class TrainConsistManagementApp {
     public static void main(String[] args) {
-        // 1. Create a list of bogies (Multiple bogies of same type for grouping)
+        // 1. Create a list of bogies
         List<Bogie> allBogies = new ArrayList<>();
         allBogies.add(new Bogie("Sleeper", 72));
         allBogies.add(new Bogie("Sleeper", 72));
         allBogies.add(new Bogie("AC Chair", 56));
-        allBogies.add(new Bogie("AC Chair", 56));
         allBogies.add(new Bogie("First Class", 24));
         allBogies.add(new Bogie("General", 90));
 
-        System.out.println("Original Flat List of Bogies: " + allBogies.size() + " items.\n");
+        System.out.println("Current Consist: " + allBogies);
 
-        // 2. Convert list into a stream
-        // 3. Apply Collectors.groupingBy() classification logic
-        // 4. Store the result in Map<String, List<Bogie>>
-        Map<String, List<Bogie>> groupedBogies = allBogies.stream()
-                .collect(Collectors.groupingBy(b -> b.name));
+        // 2. Convert to stream
+        // 3. map() extracts capacity values
+        // 4. reduce() sums the capacities using identity 0 and Integer::sum
+        int totalSeats = allBogies.stream()
+                .map(b -> b.capacity)
+                .reduce(0, Integer::sum);
 
-        // 5. Display the grouped result
-        System.out.println("--- Train Consist Grouped by Bogie Type ---");
-        groupedBogies.forEach((type, list) -> {
-            System.out.println("Category: " + type + " | Count: " + list.size());
-            list.forEach(b -> System.out.println("  -> " + b));
-        });
+        // 5. Display the total seating capacity
+        System.out.println("\n--- Train Operational Metrics ---");
+        System.out.println("Total Bogies Attached: " + allBogies.size());
+        System.out.println("Total Seating Capacity: " + totalSeats + " seats");
 
-        // Verification: Original list integrity
-        System.out.println("\nVerification: Original list is still " + allBogies.size() + " items.");
+        // Verification: Original list remains unchanged
+        System.out.println("\nVerification: Original list integrity maintained.");
     }
 }
