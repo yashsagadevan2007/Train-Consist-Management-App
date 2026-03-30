@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 class Bogie {
@@ -13,39 +14,37 @@ class Bogie {
 
     @Override
     public String toString() {
-        return name + " (" + capacity + " seats)";
+        return "Bogie{Name='" + name + "', Capacity=" + capacity + "}";
     }
 }
 
 public class TrainConsistManagementApp {
     public static void main(String[] args) {
-        // 1. Create a list of bogies (Reusing logic from UC7)
+        // 1. Create a list of bogies (Multiple bogies of same type for grouping)
         List<Bogie> allBogies = new ArrayList<>();
         allBogies.add(new Bogie("Sleeper", 72));
+        allBogies.add(new Bogie("Sleeper", 72));
+        allBogies.add(new Bogie("AC Chair", 56));
         allBogies.add(new Bogie("AC Chair", 56));
         allBogies.add(new Bogie("First Class", 24));
         allBogies.add(new Bogie("General", 90));
 
-        System.out.println("All Available Bogies: " + allBogies);
+        System.out.println("Original Flat List of Bogies: " + allBogies.size() + " items.\n");
 
         // 2. Convert list into a stream
-        // 3. Apply filter() for capacity > 60
-        // 4. Collect matching bogies into a new list
-        int threshold = 60;
-        List<String> highCapacityBogies = allBogies.stream()
-                .filter(b -> b.capacity > threshold)
-                .map(Bogie::toString) // Transforming for display
-                .collect(Collectors.toList());
+        // 3. Apply Collectors.groupingBy() classification logic
+        // 4. Store the result in Map<String, List<Bogie>>
+        Map<String, List<Bogie>> groupedBogies = allBogies.stream()
+                .collect(Collectors.groupingBy(b -> b.name));
 
-        // 5. Display the filtered bogies
-        System.out.println("\n--- High Capacity Bogies (Capacity > " + threshold + ") ---");
-        if (highCapacityBogies.isEmpty()) {
-            System.out.println("No bogies match the criteria.");
-        } else {
-            highCapacityBogies.forEach(System.out::println);
-        }
+        // 5. Display the grouped result
+        System.out.println("--- Train Consist Grouped by Bogie Type ---");
+        groupedBogies.forEach((type, list) -> {
+            System.out.println("Category: " + type + " | Count: " + list.size());
+            list.forEach(b -> System.out.println("  -> " + b));
+        });
 
-        // Verify Original Collection Integrity
-        System.out.println("\nVerification: Original list remains unchanged. Size: " + allBogies.size());
+        // Verification: Original list integrity
+        System.out.println("\nVerification: Original list is still " + allBogies.size() + " items.");
     }
 }
